@@ -41,7 +41,6 @@ public class RbMove2D : MonoBehaviour
             rb.AddForce(Vector3.up * upVel, ForceMode.VelocityChange);
             isJumping = false;
         }
-        Debug.Log(jumpCount);
     }
 
     void OnCollisionEnter(Collision hit) {
