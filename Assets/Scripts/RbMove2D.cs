@@ -6,7 +6,7 @@ public class RbMove2D : MonoBehaviour
 {
     public float speed = 100f;
     public int allowableJumps = 1;
-    public int jumpSpeed = 10;
+    public int jumpPower = 10;
     public float dampConstant = 0.75f;
     public Vector3 movement;
 
@@ -35,7 +35,7 @@ public class RbMove2D : MonoBehaviour
         movement = new Vector3(horizontal, 0, vertical).normalized;
         if (jumpCount < allowableJumps) {
             if (Input.GetKeyDown(KeyCode.Space)) {
-                upVel = jumpSpeed;
+                upVel = jumpPower;
                 isJumping = true;
                 anim.SetTrigger("Jump");
             }
