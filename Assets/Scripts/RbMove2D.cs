@@ -43,7 +43,7 @@ public class RbMove2D : MonoBehaviour
 
         Flip();
 
-        anim.SetBool("Moving", Mathf.Abs(horizontal + vertical) > 0);
+        anim.SetBool("Moving", (Mathf.Abs(horizontal) > 0 || Mathf.Abs(vertical) > 0));
     }
 
     private void FixedUpdate() {
