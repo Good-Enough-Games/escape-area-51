@@ -13,6 +13,7 @@ public class RbMove2D : MonoBehaviour
     private float upVel = 1;
     private float impactVelocity;
     private int jumpCount = 0;
+    private bool didJump = false;
     private bool isJumping = false;
     private float horizontal;
     private float vertical;
@@ -36,6 +37,7 @@ public class RbMove2D : MonoBehaviour
         if (jumpCount < allowableJumps) {
             if (Input.GetKeyDown(KeyCode.Space)) {
                 upVel = jumpPower;
+                didJump = true;
                 isJumping = true;
                 anim.SetTrigger("Jump");
             }
@@ -50,19 +52,24 @@ public class RbMove2D : MonoBehaviour
         // add current y velocity instead of setting to 0 every time
         rb.velocity = movement * speed * Time.fixedDeltaTime + new Vector3(0, rb.velocity.y, 0);
         impactVelocity = rb.velocity.y;
-        if (isJumping){
+        if (didJump){
             // mass independent force
             rb.AddForce(Vector3.up * upVel, ForceMode.VelocityChange);
-            isJumping = false;
+            didJump = false;
         }
     }
 
     private void OnCollisionEnter(Collision hit) {
         jumpCount = allowableJumps;
         upVel = -impactVelocity * Mathf.Sqrt(dampConstant);
-        isJumping = true;
+        didJump = true;
         // time perfectly to get big jump (speedrun strat)
         jumpCount = 0;
+        if (isJumping && hit.gameObject.CompareTag("Ground")) {
+            isJumping = false;
+            anim.SetTrigger("Fall");
+        }
+
     }
 
     private void OnCollisionExit(Collision hit) {
