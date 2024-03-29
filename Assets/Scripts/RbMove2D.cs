@@ -18,7 +18,9 @@ public class RbMove2D : MonoBehaviour
     private float horizontal;
     private float vertical;
     private bool facingRight = true;
+    private bool isGrounded;
     private Rigidbody rb;
+    private BoxCollider bc;
 
     [SerializeField] private Animator anim;
 
@@ -26,6 +28,8 @@ public class RbMove2D : MonoBehaviour
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        bc = gameObject.GetComponent<BoxCollider>();
+        isGrounded = detectGround();
     }
 
     // Update is called once per frame
@@ -46,6 +50,7 @@ public class RbMove2D : MonoBehaviour
         Flip();
 
         anim.SetBool("Moving", (Mathf.Abs(horizontal) > 0 || Mathf.Abs(vertical) > 0));
+        isGrounded = detectGround();
     }
 
     private void FixedUpdate() {
@@ -60,21 +65,24 @@ public class RbMove2D : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision hit) {
-        jumpCount = allowableJumps;
-        upVel = -impactVelocity * Mathf.Sqrt(dampConstant);
-        didJump = true;
-        // time perfectly to get big jump (speedrun strat)
-        jumpCount = 0;
-        if (isJumping && hit.gameObject.CompareTag("Ground")) {
-            isJumping = false;
-            anim.SetTrigger("Fall");
+        if (isGrounded) {
+            // jumpCount = allowableJumps;
+            upVel = -impactVelocity * Mathf.Sqrt(dampConstant);
+            didJump = true;
+            // time perfectly to get big jump (speedrun strat)
+            jumpCount = 0;
+            if (isJumping && isGrounded) {
+                isJumping = false;
+                anim.SetTrigger("Fall");
+            }
         }
-
     }
 
     private void OnCollisionExit(Collision hit) {
         // prevents midair jump
-        jumpCount++;
+        if (!isGrounded) {
+            jumpCount++;
+        }
     }
 
     private void Flip()
@@ -83,8 +91,16 @@ public class RbMove2D : MonoBehaviour
         {
             facingRight = !facingRight;
             Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
+            localScale.x = -localScale.x;
             transform.localScale = localScale;
         }
+    }
+
+    private bool detectGround() {
+        RaycastHit hit;
+        // draw ray from center to floor
+        float groundDetectLength = bc.size.y / 2;
+        Debug.DrawRay(transform.position, Vector3.down * groundDetectLength);
+        return Physics.Raycast(transform.position, Vector3.down, out hit, groundDetectLength);
     }
 }
