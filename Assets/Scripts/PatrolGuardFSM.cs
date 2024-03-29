@@ -45,7 +45,7 @@ public class PatrolGuardFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(transform.position - new Vector3(obstacleHeight), transform.forward * obstacleLength);
+        Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.MOVE:
                 if (fov.visibleTargets.Count > 0) {

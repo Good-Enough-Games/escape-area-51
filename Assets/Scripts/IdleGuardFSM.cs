@@ -42,7 +42,7 @@ public class IdleGuardFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(transform.position - new Vector3(obstacleHeight), transform.forward * obstacleLength);
+        Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.IDLE:
                 if (fov.visibleTargets.Count > 0) {
