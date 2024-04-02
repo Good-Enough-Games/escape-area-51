@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GuardFSM : MonoBehaviour
+public class PatrolGuardFSM : MonoBehaviour
 {
     public float patrolSpeed = 3f;
     public float chaseSpeed = 3f;
-    public float delayTime = 2f;
+    public float idleTime = 2f;
     public float rotationSpeed = 0.05f;
     enum GuardState {MOVE, CHASE, IDLE, ATTACK};
     GuardState currentState;
@@ -16,6 +16,10 @@ public class GuardFSM : MonoBehaviour
     [SerializeField] private float walkOffset = 2f;
     // delay after guard attacks
     [SerializeField] private float attackDelay = 0.5f;
+    // obstacle detection distance
+    [SerializeField] private float obstacleLength = 2f;
+    // obstacle detection height
+    [SerializeField] private float obstacleHeight = 2f;
     private Transform currWaypoint;
     // stores time guard was walking a little before checking for idle
     private float walkTime;
@@ -41,6 +45,7 @@ public class GuardFSM : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.MOVE:
                 if (fov.visibleTargets.Count > 0) {
@@ -50,7 +55,6 @@ public class GuardFSM : MonoBehaviour
                 } else {
                     isIdle = false;
                     attacked = false;
-                    StopAllCoroutines();
                     if (Vector3.Angle(transform.forward, targetDir.normalized) > threshold) {
                         transform.rotation = Quaternion.Slerp(transform.rotation, toRot, turnTime);
                         turnTime += rotationSpeed * Time.deltaTime;
@@ -71,7 +75,7 @@ public class GuardFSM : MonoBehaviour
                 break;
             case GuardState.CHASE:
                 if (fov.visibleTargets.Count == 0) {
-                    // so guard stops for a moment in confusion
+                    // so guard stops for a moment in confusion or smth
                     currentState = GuardState.IDLE;
                 } else {
                     isIdle = false;
@@ -81,7 +85,9 @@ public class GuardFSM : MonoBehaviour
                     transform.rotation = Quaternion.LookRotation(targetDir);
                     Vector3 targetPos = fov.visibleTargets[0].position;
                     targetPos.y = transform.position.y;
-                    transform.position = Vector3.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+                    if (!Physics.Raycast(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward, obstacleLength, fov.obstacleMask)) {
+                        transform.position = Vector3.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+                    }
                 }
                 break;
             case GuardState.ATTACK:
@@ -95,7 +101,16 @@ public class GuardFSM : MonoBehaviour
     private IEnumerator Idle() {
         isIdle = true;
         walkTime = 0;
-        yield return new WaitForSeconds(delayTime);
+        if (Vector3.Distance(transform.position, currWaypoint.position) < threshold) {
+            turnTime = 0;
+            while (Vector3.Angle(transform.forward, currWaypoint.forward) > threshold) {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(currWaypoint.forward), turnTime);
+                turnTime += rotationSpeed * Time.deltaTime;
+                // update loop framewise or else it executes in single frame
+                yield return new WaitForEndOfFrame();
+            }
+        }
+        yield return new WaitForSeconds(idleTime);
         currWaypoint = waypoints.getNextWaypoint(currWaypoint);
         targetDir = currWaypoint.position - transform.position;
         toRot = Quaternion.LookRotation(targetDir);

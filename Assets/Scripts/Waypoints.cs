@@ -12,6 +12,7 @@ public class Waypoints : MonoBehaviour
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(t.position, size);
+            Debug.DrawRay(t.position, t.forward * 5f);
         }
         Gizmos.color = Color.red;
         for (int i = 0; i < transform.childCount - 1; i++)

@@ -18,7 +18,10 @@ public class RbMove2D : MonoBehaviour
     private float horizontal;
     private float vertical;
     private bool facingRight = true;
+    private bool isGrounded;
     private Rigidbody rb;
+    private BoxCollider bc;
+    private SpriteRenderer sprite;
 
     [SerializeField] private Animator anim;
 
@@ -26,6 +29,10 @@ public class RbMove2D : MonoBehaviour
     private void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        bc = gameObject.GetComponent<BoxCollider>();
+        // get sprite renderer from sprite
+        sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        isGrounded = detectGround();
     }
 
     // Update is called once per frame
@@ -46,6 +53,7 @@ public class RbMove2D : MonoBehaviour
         Flip();
 
         anim.SetBool("Moving", (Mathf.Abs(horizontal) > 0 || Mathf.Abs(vertical) > 0));
+        isGrounded = detectGround();
     }
 
     private void FixedUpdate() {
@@ -57,24 +65,28 @@ public class RbMove2D : MonoBehaviour
             rb.AddForce(Vector3.up * upVel, ForceMode.VelocityChange);
             didJump = false;
         }
+        Debug.Log(isGrounded);
     }
 
     private void OnCollisionEnter(Collision hit) {
-        jumpCount = allowableJumps;
-        upVel = -impactVelocity * Mathf.Sqrt(dampConstant);
-        didJump = true;
-        // time perfectly to get big jump (speedrun strat)
-        jumpCount = 0;
-        if (isJumping && hit.gameObject.CompareTag("Ground")) {
-            isJumping = false;
-            anim.SetTrigger("Fall");
+        if (isGrounded) {
+            // jumpCount = allowableJumps;
+            upVel = -impactVelocity * Mathf.Sqrt(dampConstant);
+            didJump = true;
+            // time perfectly to get big jump (speedrun strat)
+            jumpCount = 0;
+            if (isJumping && isGrounded) {
+                isJumping = false;
+                anim.SetTrigger("Fall");
+            }
         }
-
     }
 
     private void OnCollisionExit(Collision hit) {
         // prevents midair jump
-        jumpCount++;
+        if (!isGrounded) {
+            jumpCount++;
+        }
     }
 
     private void Flip()
@@ -82,9 +94,15 @@ public class RbMove2D : MonoBehaviour
         if (facingRight && horizontal < 0 || !facingRight && horizontal > 0)
         {
             facingRight = !facingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            sprite.flipX = !facingRight;
         }
+    }
+
+    private bool detectGround() {
+        RaycastHit hit;
+        // draw ray from center to floor
+        float groundDetectLength = bc.size.y / 2 + 0.1f;
+        Debug.DrawRay(transform.position, Vector3.down * groundDetectLength);
+        return Physics.Raycast(transform.position, Vector3.down, out hit, groundDetectLength);
     }
 }
