@@ -21,6 +21,7 @@ public class RbMove2D : MonoBehaviour
     private bool isGrounded;
     private Rigidbody rb;
     private BoxCollider bc;
+    private SpriteRenderer sprite;
 
     [SerializeField] private Animator anim;
 
@@ -29,6 +30,8 @@ public class RbMove2D : MonoBehaviour
     {
         rb = gameObject.GetComponent<Rigidbody>();
         bc = gameObject.GetComponent<BoxCollider>();
+        // get sprite renderer from sprite
+        sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
         isGrounded = detectGround();
     }
 
@@ -62,6 +65,7 @@ public class RbMove2D : MonoBehaviour
             rb.AddForce(Vector3.up * upVel, ForceMode.VelocityChange);
             didJump = false;
         }
+        Debug.Log(isGrounded);
     }
 
     private void OnCollisionEnter(Collision hit) {
@@ -90,16 +94,14 @@ public class RbMove2D : MonoBehaviour
         if (facingRight && horizontal < 0 || !facingRight && horizontal > 0)
         {
             facingRight = !facingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x = -localScale.x;
-            transform.localScale = localScale;
+            sprite.flipX = !facingRight;
         }
     }
 
     private bool detectGround() {
         RaycastHit hit;
         // draw ray from center to floor
-        float groundDetectLength = bc.size.y / 2;
+        float groundDetectLength = bc.size.y / 2 + 0.1f;
         Debug.DrawRay(transform.position, Vector3.down * groundDetectLength);
         return Physics.Raycast(transform.position, Vector3.down, out hit, groundDetectLength);
     }
