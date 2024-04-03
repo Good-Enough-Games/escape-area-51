@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private float impactVelocity;
     private bool isGrounded = true;
     private bool facingRight = true;
+    private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
     private Rigidbody rb;
     private SpriteRenderer sprite;
 
@@ -38,7 +39,19 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            anim.SetTrigger("Transform");
+            // todo add logic for multiple transforms
+            if (transformStatus == 0)
+            {
+                transformStatus = 1;
+                anim.SetTrigger("Transform");
+                anim.SetInteger("Transform Status", 1);
+            }
+            else
+            {
+                transformStatus = 0;
+                anim.SetTrigger("Transform");
+                anim.SetInteger("Transform Status", 0);
+            }
         }
 
         Flip();
