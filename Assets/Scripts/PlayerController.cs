@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Animator anim;
+
     [SerializeField] private float speed = 100f;
     [SerializeField] private int jumpPower = 10;
     [SerializeField] private float dampConstant = 0.25f;
@@ -14,6 +15,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cooldownLength = 1;
     // seconds before cooldown starts
     [SerializeField] private float cooldownOffset = 2;
+
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource jumpSound;
+    [SerializeField] private AudioSource movementSound;
+    [SerializeField] private AudioSource transformSound;
+
     private float horizontal;
     private float vertical;
     private float impactVelocity;
@@ -32,6 +39,8 @@ public class PlayerController : MonoBehaviour
         // get sprite renderer from sprite
         sprite = gameObject.GetComponent<SpriteRenderer>();
         transformLeft = transformDuration;
+        movementSound.loop = true;
+        movementSound.volume = 5f;
     }
 
     // Update is called once per frame
@@ -40,13 +49,27 @@ public class PlayerController : MonoBehaviour
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
 
+        if (horizontal != 0 || vertical != 0) {
+            if (!movementSound.isPlaying)
+            {
+                movementSound.UnPause();
+                movementSound.Play();
+            }
+        }
+        else
+        {
+            movementSound.Pause();
+        }
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+            jumpSound.PlayOneShot(jumpSound.clip, 1f);
             rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
             anim.SetTrigger("Jump");
         }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
+            transformSound.PlayOneShot(transformSound.clip, 1f);
             // todo add logic for multiple transforms
             if (transformStatus == 0)
             {
