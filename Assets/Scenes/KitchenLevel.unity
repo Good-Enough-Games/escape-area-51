@@ -1443,7 +1443,7 @@ GameObject:
   - component: {fileID: 912094157}
   - component: {fileID: 912094156}
   - component: {fileID: 912094155}
-  - component: {fileID: 912094154}
+  - component: {fileID: 912094158}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1451,22 +1451,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &912094154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 912094153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76bae49c66b154e1987780ff49575cdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 1010345257}
-  smoothTime: 0.3
-  height: 12
-  distance: -15
 --- !u!81 &912094155
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1535,12 +1519,26 @@ Transform:
   m_GameObject: {fileID: 912094153}
   serializedVersion: 2
   m_LocalRotation: {x: 0.28419566, y: -0, z: -0, w: 0.9587663}
-  m_LocalPosition: {x: 4.91, y: 7.55, z: -30.33}
+  m_LocalPosition: {x: -1.75, y: 17.79, z: -36.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 33.022, y: 0, z: 0}
+--- !u!114 &912094158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912094153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a06488af936481ab037290d409e96f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1010345257}
+  smoothTime: 0.9
 --- !u!1 &1010345252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1553,6 +1551,7 @@ GameObject:
   - component: {fileID: 1010345255}
   - component: {fileID: 1010345254}
   - component: {fileID: 1010345253}
+  - component: {fileID: 1010345261}
   - component: {fileID: 1010345259}
   - component: {fileID: 1010345258}
   - component: {fileID: 1010345260}
@@ -1743,6 +1742,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.86, y: 0.45, z: 0.19}
   m_Center: {x: 0, y: -1.27, z: 0}
+--- !u!114 &1010345261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010345252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e35de686e4e4e4476bbdfdecce43b7b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1090844916
 GameObject:
   m_ObjectHideFlags: 0
