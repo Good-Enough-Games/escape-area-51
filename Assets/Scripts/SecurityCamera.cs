@@ -24,16 +24,21 @@ public class SecurityCamera : MonoBehaviour
         int layerMask = 1 << 6;
         layerMask = ~layerMask;
         RaycastHit hit;
-        Debug.DrawRay(transform.position, target.position - transform.position);
-        if (Physics.Raycast(transform.position, target.position - transform.position, out hit, Vector3.Distance(transform.position, target.position), layerMask)) {
+        Vector3 obTargetPos = target.position + new Vector3(0, -1f, 0);
+        Debug.DrawRay(transform.position, obTargetPos - transform.position);
+        if (Physics.Raycast(transform.position, obTargetPos - transform.position, out hit, Vector3.Distance(transform.position, target.position), layerMask)) {
             obstacle = hit.collider.gameObject;
-            opacity = obstacle.GetComponent<MeshRenderer>().material.color;
+            Material mat = obstacle.GetComponent<MeshRenderer>().material;
+            opacity = mat.color;
             opacity.a = 0.5f;
-            obstacle.GetComponent<MeshRenderer>().material.color = opacity;
+            mat.color = opacity;
+            mat.renderQueue = 3001;
             flag = true;
         } else if (flag == true) {
             opacity.a = 1f;
-            obstacle.GetComponent<MeshRenderer>().material.color = opacity;
+            Material mat = obstacle.GetComponent<MeshRenderer>().material;
+            mat.color = opacity;
+            mat.renderQueue = 2999;
             flag = false;
         }
     }

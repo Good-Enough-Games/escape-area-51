@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641228, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1578,7 +1578,7 @@ MonoBehaviour:
   speed: 320
   jumpPower: 25
   dampConstant: 0.2
-  transformDuration: 5
+  transformDuration: 15
   cooldownLength: 1
   cooldownOffset: 2
   jumpSound: {fileID: 749170304}

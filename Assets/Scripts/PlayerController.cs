@@ -137,7 +137,8 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Transform()
     {
-        transform.gameObject.tag = "Transform";
+        gameObject.tag = "Transform";
+        Debug.Log(transform.gameObject.tag);
         while (transformLeft > 0) {
             transformLeft--;
             yield return new WaitForSeconds(1);
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Cooldown()
     {
-        transform.gameObject.tag = "Player";
+        gameObject.tag = "Player";
         yield return new WaitForSeconds(cooldownOffset);
         while (transformLeft < transformDuration) {
             transformLeft++;
