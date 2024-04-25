@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
     private float impactVelocity;
-    private bool isGrounded = true;
+    private int groundTriggers = 0; // number of "ground" triggers player is currently touching
     private bool facingRight = true;
     private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
     private Rigidbody rb;
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
             movementSound.Pause();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) {
+        if (Input.GetKeyDown(KeyCode.Space) && groundTriggers > 0) {
             jumpSound.PlayOneShot(jumpSound.clip, 1f);
             rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
             anim.SetTrigger("Jump");
@@ -111,18 +111,22 @@ public class PlayerController : MonoBehaviour
     {
         if (hit.gameObject.CompareTag("Ground")) {
             rb.AddForce(Vector3.up * (-impactVelocity * Mathf.Sqrt(dampConstant)), ForceMode.VelocityChange);
-            isGrounded = true;
-            anim.SetBool("Hit Ground", true);
-            anim.SetBool("Falling", false);
+            if (groundTriggers == 0) {
+                anim.SetBool("Hit Ground", true);
+                anim.SetBool("Falling", false);
+            }
+            groundTriggers++;
         }
     }
 
     private void OnTriggerExit(Collider hit)
     {
         if (hit.gameObject.CompareTag("Ground")) {
-            isGrounded = false;
-            anim.SetBool("Hit Ground", false);
-            anim.SetBool("Falling", true);
+            groundTriggers--;
+            if (groundTriggers == 0) {
+                anim.SetBool("Hit Ground", false);
+                anim.SetBool("Falling", true);
+            }
         }
     }
 
