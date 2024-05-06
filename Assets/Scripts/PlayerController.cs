@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,17 +10,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 100f;
     [SerializeField] private int jumpPower = 10;
     [SerializeField] private float dampConstant = 0.25f;
-    // seconds allowed to transform
-    [SerializeField] private float transformDuration = 15;
-    // seconds to restore 1 "unit" of transform energy (?)
-    [SerializeField] private float cooldownLength = 1;
-    // seconds before cooldown starts
-    [SerializeField] private float cooldownOffset = 2;
 
     [Header("Audio Sources")]
     [SerializeField] private AudioSource jumpSound;
     [SerializeField] private AudioSource movementSound;
     [SerializeField] private AudioSource transformSound;
+
+    [Header("Transform Bar")]
+    [SerializeField] private float transformDuration = 10; // seconds?? allowed to be transformed
+    [SerializeField] private float transformRegenerationTime = 2; // seconds??  to fully restore transform from empty
+    [SerializeField] private float transformRegenerationPauseTime = 2; // seconds before transform regen starts
+    [SerializeField] private Image transformBar; // empty bar
+    [SerializeField] private Image transformBarFill; // green inner part of bar
+    [SerializeField] private Sprite transformBarRed; // to flash when bar is almost empty
+    [SerializeField] private Sprite transformBarEmpty; // to flash when bar is almost empty
 
     private float horizontal;
     private float vertical;
@@ -29,8 +33,7 @@ public class PlayerController : MonoBehaviour
     private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
     private Rigidbody rb;
     private SpriteRenderer sprite;
-    // how much time left
-    private float transformLeft;
+    private float transformLeftMillis; // how much time left in milliseconds
 
     // Start is called before the first frame update
     private void Start()
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         // get sprite renderer from sprite
         sprite = gameObject.GetComponent<SpriteRenderer>();
-        transformLeft = transformDuration;
+        transformLeftMillis = transformDuration * 1000;
         movementSound.loop = true;
         movementSound.volume = 5f;
     }
@@ -70,10 +73,11 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             transformSound.PlayOneShot(transformSound.clip, 1f);
+            transformBar.sprite = transformBarEmpty;
             // todo add logic for multiple transforms
-            if (transformStatus == 0)
+            if (transformStatus == 0) // if currently "self", ie not transformed
             {
-                if (transformLeft > 0) {
+                if (transformLeftMillis > 0) {
                     StopAllCoroutines();
                     transformStatus = 1;
                     anim.SetTrigger("Transform");
@@ -81,13 +85,13 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(Transform());
                 }
             }
-            else
+            else // currently transformed into something else, tranform back to self
             {
                 StopAllCoroutines();
                 transformStatus = 0;
                 anim.SetTrigger("Transform");
                 anim.SetInteger("Transform Status", 0);
-                StartCoroutine(Cooldown());
+                StartCoroutine(RegenerateTransform());
             }
         }
 
@@ -142,24 +146,46 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Transform()
     {
         gameObject.tag = "Transform";
-        Debug.Log(transform.gameObject.tag);
-        while (transformLeft > 0) {
-            transformLeft--;
-            yield return new WaitForSeconds(1);
+        int flashNum = 0;
+        while (transformLeftMillis > 0)
+        {
+            transformLeftMillis -= 50;
+            transformBarFill.fillAmount = transformLeftMillis / (transformDuration * 1000);
+            if (transformLeftMillis / (transformDuration * 1000) < 0.25 && flashNum > 3)
+            {
+                if (transformBar.sprite == transformBarRed)
+                {
+                    transformBar.sprite = transformBarEmpty;
+                }
+                else
+                {
+                    transformBar.sprite = transformBarRed;
+                }
+                flashNum = 0;
+            }
+            else
+            {
+                flashNum++;
+            }
+            yield return new WaitForSeconds(0.05f);
         }
-        transformStatus = 0;
+        transformBar.sprite = transformBarEmpty;
+        transformStatus = 0; // force transform back to self
         anim.SetTrigger("Transform");
         anim.SetInteger("Transform Status", 0);
-        StartCoroutine(Cooldown());
+        transformSound.PlayOneShot(transformSound.clip, 1f);
+        StartCoroutine(RegenerateTransform());
     }
 
-    private IEnumerator Cooldown()
+    private IEnumerator RegenerateTransform()
     {
         gameObject.tag = "Player";
-        yield return new WaitForSeconds(cooldownOffset);
-        while (transformLeft < transformDuration) {
-            transformLeft++;
-            yield return new WaitForSeconds(cooldownLength);
+        yield return new WaitForSeconds(transformRegenerationPauseTime);
+        while (transformLeftMillis < transformDuration * 1000)
+        {
+            transformLeftMillis += 50;
+            transformBarFill.fillAmount = transformLeftMillis / (transformDuration * 1000);
+            yield return new WaitForSeconds(transformRegenerationTime / 100);
         }
     }
 }
