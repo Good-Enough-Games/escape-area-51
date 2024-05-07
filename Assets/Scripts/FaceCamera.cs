@@ -18,10 +18,13 @@ public class FaceCamera : MonoBehaviour
         // Calculate the direction from the sprite to the camera
         Vector3 directionToCamera = mainCamera.transform.position - transform.position;
 
-        // Calculate the angle in radians
-        Quaternion rotation = Quaternion.LookRotation(-directionToCamera, Vector3.up);
+        // Calculate the target rotation to face the camera
+        Quaternion targetRotation = Quaternion.LookRotation(-directionToCamera, Vector3.up);
 
-        // Apply rotation only around the Z-axis (2D rotation)
-        transform.rotation = rotation;
+        // Extract the Y-axis rotation from the target rotation
+        Quaternion yRotation = Quaternion.Euler(0, targetRotation.eulerAngles.y, 0);
+
+        // Apply the Y-axis rotation to the object
+        transform.rotation = yRotation;
     }
 }

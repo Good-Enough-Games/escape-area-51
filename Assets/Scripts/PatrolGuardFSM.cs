@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class PatrolGuardFSM : MonoBehaviour
 {
-    public float patrolSpeed = 3f;
-    public float chaseSpeed = 3f;
-    public float idleTime = 2f;
-    public float rotationSpeed = 0.05f;
+    [SerializeField] private Animator anim;
+
+    [SerializeField] private float patrolSpeed = 3f;
+    [SerializeField] private float chaseSpeed = 3f;
+    [SerializeField] private float idleTime = 2f;
+    [SerializeField] private float rotationSpeed = 0.05f;
+
     enum GuardState {MOVE, CHASE, IDLE, ATTACK};
     GuardState currentState;
+
     [SerializeField] private Waypoints waypoints;
     [SerializeField] private float threshold = 0.1f;
     // how long in GuardState.MOVE before checking for idle
@@ -20,15 +24,18 @@ public class PatrolGuardFSM : MonoBehaviour
     [SerializeField] private float obstacleLength = 2f;
     // obstacle detection height
     [SerializeField] private float obstacleHeight = 2f;
+
     private Transform currWaypoint;
-    // stores time guard was walking a little before checking for idle
-    private float walkTime;
+    private float walkTime; // stores time guard was walking a little before checking for idle
     private bool isIdle;
     private bool attacked;
     private Quaternion toRot;
     private Vector3 targetDir;
     private float turnTime;
     private FieldOfView fov;
+    private bool facingRight;
+    private SpriteRenderer sprite;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,11 +47,15 @@ public class PatrolGuardFSM : MonoBehaviour
         currWaypoint = waypoints.getNextWaypoint(currWaypoint);
         transform.LookAt(currWaypoint);
         fov = GetComponent<FieldOfView>();
+        sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        facingRight = transform.rotation.eulerAngles.y > 180f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        UpdateSprite();
+
         Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.MOVE:
@@ -136,6 +147,29 @@ public class PatrolGuardFSM : MonoBehaviour
             forceDirection.y=0;
             forceDirection.Normalize();
             rb.AddForceAtPosition(forceDirection * 100f, transform.position, ForceMode.Impulse);
+        }
+    }
+
+    private void UpdateSprite() 
+    {
+        // update sprite animation based on rotation
+        float currentRotation = transform.rotation.eulerAngles.y;
+        if (currentRotation > 315f || currentRotation < 45f)
+        {
+            anim.SetTrigger("North");
+        }
+        else if (currentRotation > 135f && currentRotation < 225f)
+        {
+            anim.SetTrigger("South");
+        }
+        else
+        {
+            anim.SetTrigger("EastWest");
+            if (facingRight && currentRotation < 180f || !facingRight && currentRotation > 180f)
+            {
+                facingRight = !facingRight;
+                sprite.flipX = !facingRight;
+            }
         }
     }
 }
