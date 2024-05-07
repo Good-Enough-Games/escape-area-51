@@ -152,19 +152,19 @@ public class PatrolGuardFSM : MonoBehaviour
 
     private void UpdateSprite() 
     {
-        // update sprite animation based on rotation
+        // update sprite animation based on rotation... Rotation parameter in animation: 1 = up, -1 = down, 0 = side
         float currentRotation = transform.rotation.eulerAngles.y;
         if (currentRotation > 315f || currentRotation < 45f)
         {
-            anim.SetTrigger("North");
+            anim.SetInteger("Rotation", 1);
         }
         else if (currentRotation > 135f && currentRotation < 225f)
         {
-            anim.SetTrigger("South");
+            anim.SetInteger("Rotation", -1);
         }
         else
         {
-            anim.SetTrigger("EastWest");
+            anim.SetInteger("Rotation", 0);
             if (facingRight && currentRotation < 180f || !facingRight && currentRotation > 180f)
             {
                 facingRight = !facingRight;

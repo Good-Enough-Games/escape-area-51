@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 3362227}
   - component: {fileID: 3362226}
   - component: {fileID: 3362225}
-  - component: {fileID: 3362231}
   m_Layer: 0
   m_Name: Moving Center Chef
   m_TagString: Untagged
@@ -226,27 +225,6 @@ Transform:
   - {fileID: 274548509}
   m_Father: {fileID: 438757808}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3362231
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3362224}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 01f4e8ff466ad462e9665be48b57cdeb, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8696714
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,9 +555,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 274548509}
-  - component: {fileID: 274548512}
   - component: {fileID: 274548511}
   - component: {fileID: 274548510}
+  - component: {fileID: 274548512}
   m_Layer: 0
   m_Name: Center Chef SpriteAnim
   m_TagString: Untagged
@@ -3078,9 +3056,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1927095463}
-  - component: {fileID: 1927095465}
   - component: {fileID: 1927095464}
   - component: {fileID: 1927095466}
+  - component: {fileID: 1927095467}
   m_Layer: 0
   m_Name: Left Chef SpriteAnim
   m_TagString: Untagged
@@ -3155,7 +3133,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &1927095465
+--- !u!114 &1927095466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927095462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e35de686e4e4e4476bbdfdecce43b7b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &1927095467
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -3176,18 +3166,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1927095466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1927095462}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e35de686e4e4e4476bbdfdecce43b7b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2041454647
 GameObject:
   m_ObjectHideFlags: 0
@@ -3240,7 +3218,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd360c6f870fd4e869ecb8cb734a9ea5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 1927095465}
+  anim: {fileID: 1927095467}
   patrolSpeed: 3
   chaseSpeed: 3
   idleTime: 5

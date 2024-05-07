@@ -64,8 +64,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: EastWest
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7275653124441137059}
@@ -90,20 +90,8 @@ AnimatorController:
   m_Name: GuardAnimController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: North
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: South
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: EastWest
-    m_Type: 9
+  - m_Name: Rotation
+    m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
@@ -129,9 +117,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: South
-    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
+    m_EventTreshold: -1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5061534019371071570}
   m_Solo: 0
@@ -154,9 +142,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: South
-    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
+    m_EventTreshold: -1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 5061534019371071570}
   m_Solo: 0
@@ -179,8 +167,8 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: EastWest
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7275653124441137059}
@@ -204,9 +192,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: North
-    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
+    m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1775625806215189152}
   m_Solo: 0
@@ -229,9 +217,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: North
-    m_EventTreshold: 0
+  - m_ConditionMode: 6
+    m_ConditionEvent: Rotation
+    m_EventTreshold: 1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1775625806215189152}
   m_Solo: 0
