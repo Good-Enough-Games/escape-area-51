@@ -152,6 +152,7 @@ public class PlayerController : MonoBehaviour
             if (numLives < 1)
             {
                 numLives = 3;
+                hasScrewdriver = false;
                 gameObject.transform.position = new Vector3(-28f, 6.5f, -37f);
                 gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
             }
