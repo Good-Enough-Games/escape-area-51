@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool hasScrewdriver = false; // if player has screwdriver
+    public bool canCollectScrewdriver = false;
+    public bool canOpenVent = false; // if player can open vent
+    public bool showError = false; // show error msg if no screwdriver
+    public Vent vent;
+    public Image screwdriver; // indicates screwdriver in inventory
+    [SerializeField] private Transform ventTransform; // the vent object
     [SerializeField] private Animator anim;
 
     [SerializeField] private float speed = 100f;
@@ -45,6 +52,8 @@ public class PlayerController : MonoBehaviour
         movementSound.loop = true;
         movementSound.volume = 5f;
         StartCoroutine(Transform());
+        vent = ventTransform.GetComponent<Vent>();
+        screwdriver.enabled = false;
     }
 
     // Update is called once per frame
@@ -93,6 +102,16 @@ public class PlayerController : MonoBehaviour
                 anim.SetTrigger("Transform");
                 anim.SetInteger("Transform Status", 0);
                 StartCoroutine(RegenerateTransform());
+            }
+        }
+
+        if (canOpenVent) {
+            if (Input.GetKeyDown(KeyCode.F)) {
+                if (hasScrewdriver) {
+                    vent.isOpen = true;
+                } else {
+                    StartCoroutine(ShowError());
+                }
             }
         }
 
@@ -188,5 +207,11 @@ public class PlayerController : MonoBehaviour
             transformBarFill.fillAmount = transformLeftMillis / (transformDuration * 1000);
             yield return new WaitForSeconds(transformRegenerationTime / 100);
         }
+    }
+
+    private IEnumerator ShowError() {
+        showError = true;
+        yield return new WaitForSeconds(2);
+        showError = false;
     }
 }
