@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int jumpPower = 10;
     [SerializeField] private float dampConstant = 0.25f;
     [SerializeField] private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
+    [SerializeField] private int numLives = 3;
 
     [Header("Audio Sources")]
     [SerializeField] private AudioSource jumpSound;
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private bool facingRight = true;
     private Rigidbody rb;
     private SpriteRenderer sprite;
+    private bool invincible = false;
     private float transformLeftMillis; // how much time left in milliseconds
 
     // Start is called before the first frame update
@@ -141,6 +143,20 @@ public class PlayerController : MonoBehaviour
             }
             groundTriggers++;
         }
+        else if (hit.gameObject.CompareTag("Guard") && !invincible)
+        {
+            numLives--;
+            gameObject.transform.localScale -= new Vector3(0.25f, 0.25f, 0.25f);
+            invincible = true;
+            StartCoroutine(ResetInvincibility());
+            if (numLives < 1)
+            {
+                numLives = 3;
+                gameObject.transform.position = new Vector3(-28f, 6.5f, -37f);
+                gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
+        Debug.Log(hit.gameObject.tag);
     }
 
     private void OnTriggerExit(Collider hit)
@@ -213,5 +229,17 @@ public class PlayerController : MonoBehaviour
         showError = true;
         yield return new WaitForSeconds(2);
         showError = false;
+    }
+
+    private IEnumerator ResetInvincibility()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.6f);
+            yield return new WaitForSeconds(0.5f);
+            GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
+            yield return new WaitForSeconds(0.5f);
+        }
+        invincible = false;
     }
 }

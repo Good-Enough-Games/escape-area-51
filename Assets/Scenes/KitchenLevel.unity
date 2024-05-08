@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 3362225}
   m_Layer: 0
   m_Name: Moving Center Chef
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,7 +306,7 @@ GameObject:
   - component: {fileID: 58408651}
   m_Layer: 0
   m_Name: Idle Right Chef
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2104,7 +2104,7 @@ GameObject:
   - component: {fileID: 591156950}
   m_Layer: 0
   m_Name: Idle Rear Chef
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2480,7 +2480,7 @@ GameObject:
   - component: {fileID: 639700292}
   m_Layer: 0
   m_Name: Rail
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3579,6 +3579,7 @@ MonoBehaviour:
   jumpPower: 25
   dampConstant: 0.2
   transformStatus: 1
+  numLives: 3
   jumpSound: {fileID: 749170304}
   movementSound: {fileID: 1202450839}
   transformSound: {fileID: 1757765754}
@@ -4459,7 +4460,7 @@ GameObject:
   - component: {fileID: 1308055812}
   m_Layer: 0
   m_Name: Rail (1)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6153,7 +6154,7 @@ GameObject:
   - component: {fileID: 1817523063}
   m_Layer: 0
   m_Name: Rail (2)
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6506,7 +6507,7 @@ GameObject:
   - component: {fileID: 2041454648}
   m_Layer: 0
   m_Name: Moving Left Chef
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
