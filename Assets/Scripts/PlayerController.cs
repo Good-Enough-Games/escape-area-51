@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 100f;
     [SerializeField] private int jumpPower = 10;
     [SerializeField] private float dampConstant = 0.25f;
+    [SerializeField] private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
 
     [Header("Audio Sources")]
     [SerializeField] private AudioSource jumpSound;
@@ -30,7 +31,6 @@ public class PlayerController : MonoBehaviour
     private float impactVelocity;
     private int groundTriggers = 0; // number of "ground" triggers player is currently touching
     private bool facingRight = true;
-    private int transformStatus = 0; // 0 = self, 1 = first item in transforms array, etc
     private Rigidbody rb;
     private SpriteRenderer sprite;
     private float transformLeftMillis; // how much time left in milliseconds
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
         transformLeftMillis = transformDuration * 1000;
         movementSound.loop = true;
         movementSound.volume = 5f;
+        StartCoroutine(Transform());
     }
 
     // Update is called once per frame
