@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class IdleGuardFSM : MonoBehaviour
 {
+    [SerializeField] private Animator anim;
     public float walkSpeed = 2f;
     public float chaseSpeed = 3f;
     public float idleTime = 2f;
@@ -25,6 +26,8 @@ public class IdleGuardFSM : MonoBehaviour
     private Quaternion toRot;
     private Vector3 targetDir;
     private float turnTime;
+    private bool facingRight;
+    private SpriteRenderer sprite;
 
     private FieldOfView fov;
     // Start is called before the first frame update
@@ -37,14 +40,18 @@ public class IdleGuardFSM : MonoBehaviour
         currWaypoint = spot.getNextWaypoint(currWaypoint);
         transform.rotation = Quaternion.LookRotation(currWaypoint.forward);
         fov = GetComponent<FieldOfView>();
+        sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        facingRight = transform.rotation.eulerAngles.y > 180f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        UpdateSprite();
         Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.IDLE:
+                anim.SetBool("Moving", false);
                 if (fov.visibleTargets.Count > 0) {
                     currentState = GuardState.CHASE;
                 } else {
@@ -54,6 +61,7 @@ public class IdleGuardFSM : MonoBehaviour
                 }
                 break;
             case GuardState.CHASE:
+                anim.SetBool("Moving", true);
                 if (fov.visibleTargets.Count == 0) {
                     currentState = GuardState.IDLE;
                 } else {
@@ -69,6 +77,7 @@ public class IdleGuardFSM : MonoBehaviour
                 }
                 break;
             case GuardState.ATTACK:
+                anim.SetBool("Moving", true);
                 if (!attacked) {
                     StartCoroutine(Attack());
                 }
@@ -123,6 +132,29 @@ public class IdleGuardFSM : MonoBehaviour
             forceDirection.y=0;
             forceDirection.Normalize();
             rb.AddForceAtPosition(forceDirection * 100f, transform.position, ForceMode.Impulse);
+        }
+    }
+
+    private void UpdateSprite() 
+    {
+        // update sprite animation based on rotation... Rotation parameter in animation: 1 = up, -1 = down, 0 = side
+        float currentRotation = transform.rotation.eulerAngles.y;
+        if (currentRotation > 315f || currentRotation < 45f)
+        {
+            anim.SetInteger("Rotation", 1);
+        }
+        else if (currentRotation > 135f && currentRotation < 225f)
+        {
+            anim.SetInteger("Rotation", -1);
+        }
+        else
+        {
+            anim.SetInteger("Rotation", 0);
+            if (facingRight && currentRotation < 180f || !facingRight && currentRotation > 180f)
+            {
+                facingRight = !facingRight;
+                sprite.flipX = !facingRight;
+            }
         }
     }
 }

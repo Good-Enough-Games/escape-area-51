@@ -26,6 +26,7 @@ public class PatrolGuardFSM : MonoBehaviour
     [SerializeField] private float obstacleHeight = 2f;
 
     private Transform currWaypoint;
+    private Vector3 prevPosition;
     private float walkTime; // stores time guard was walking a little before checking for idle
     private bool isIdle;
     private bool attacked;
@@ -43,6 +44,7 @@ public class PatrolGuardFSM : MonoBehaviour
         turnTime = 0;
         currentState = GuardState.MOVE;
         currWaypoint = waypoints.getRandomWaypoint();
+        prevPosition = transform.position;
         transform.position = currWaypoint.position;
         currWaypoint = waypoints.getNextWaypoint(currWaypoint);
         transform.LookAt(currWaypoint);
@@ -59,6 +61,7 @@ public class PatrolGuardFSM : MonoBehaviour
         Debug.DrawRay(transform.position - new Vector3(0, obstacleHeight, 0), transform.forward * obstacleLength);
         switch(currentState) {
             case GuardState.MOVE:
+                anim.SetBool("Moving", true);
                 if (fov.visibleTargets.Count > 0) {
                     currentState = GuardState.CHASE;
                 } else if (Vector3.Distance(transform.position, currWaypoint.position) < threshold && walkTime > walkOffset) {
@@ -76,6 +79,7 @@ public class PatrolGuardFSM : MonoBehaviour
                 }
                 break;
             case GuardState.IDLE:
+                anim.SetBool("Moving", false);
                 if (fov.visibleTargets.Count > 0) {
                     currentState = GuardState.CHASE;
                 } else {
@@ -85,6 +89,7 @@ public class PatrolGuardFSM : MonoBehaviour
                 }
                 break;
             case GuardState.CHASE:
+                anim.SetBool("Moving", true);
                 if (fov.visibleTargets.Count == 0) {
                     // so guard stops for a moment in confusion or smth
                     currentState = GuardState.IDLE;
@@ -102,6 +107,7 @@ public class PatrolGuardFSM : MonoBehaviour
                 }
                 break;
             case GuardState.ATTACK:
+                anim.SetBool("Moving", true);
                 if (!attacked) {
                     StartCoroutine(Attack());
                 }
